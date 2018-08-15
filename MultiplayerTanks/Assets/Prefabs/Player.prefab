@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4133132441855902}
+  - component: {fileID: 65059332122352142}
   m_Layer: 0
   m_Name: Chassis
   m_TagString: Untagged
@@ -68,6 +69,7 @@ GameObject:
   - component: {fileID: 4034858517904144}
   - component: {fileID: 33132650642965624}
   - component: {fileID: 23545465374896318}
+  - component: {fileID: 64553202257367874}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -84,8 +86,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4729284890814302}
   - component: {fileID: 54313916277490672}
-  - component: {fileID: 136852531825492880}
+  - component: {fileID: 114493209644935230}
+  - component: {fileID: 114668678399248056}
   - component: {fileID: 114077281977841800}
+  - component: {fileID: 114293220693912108}
+  - component: {fileID: 114571102452458864}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -256,11 +261,37 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
+--- !u!64 &64553202257367874
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1509219486869590}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: c95d1d7ced3a4704c903e09be41ff7f0, type: 3}
+--- !u!65 &65059332122352142
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1180078281521070}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 1, z: 3.25}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &114077281977841800
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -272,21 +303,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 224694d488cb2744890459f1c5c27a3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 100
-  chassisRotateSpeed: 1
-  turretRotateSpeed: 3
+  MoveSpeed: 150
+  ChassisRotateSpeed: 1
+  TurretRotateSpeed: 3
   chassis: {fileID: 4133132441855902}
   turret: {fileID: 4351816261922752}
---- !u!136 &136852531825492880
-CapsuleCollider:
+--- !u!114 &114293220693912108
+MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1521635398358378}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 2.2
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.75, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0332841857792874d8bf0248b8c3647b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114493209644935230
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521635398358378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22322eaaa6b96fc4d9b51790f98df77b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114571102452458864
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521635398358378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb28b1b3aac606a4f8a415f5ea832b1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114668678399248056
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521635398358378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a16bfbf3b6adb3c46828ee36d16e3f36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
