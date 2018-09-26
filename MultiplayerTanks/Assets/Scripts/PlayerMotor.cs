@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 #pragma warning disable 649     // suppress 'never assigned'
 #pragma warning disable IDE0044 // suppress 'convert to readonly'
 
@@ -6,7 +7,7 @@
 /// Controls player tank's movement.
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMotor : MonoBehaviour
+public class PlayerMotor : NetworkBehaviour
 {
     public float MoveSpeed = 150f;
     public float ChassisRotateSpeed = 1f;
@@ -44,7 +45,7 @@ public class PlayerMotor : MonoBehaviour
         FaceDirection(turret, direction, TurretRotateSpeed);
     }
 
-    private void FaceDirection(Transform objectTransform, Vector3 direction, float rotationSpeed)
+    private static void FaceDirection(Transform objectTransform, Vector3 direction, float rotationSpeed)
     {
         if (objectTransform != null && direction != Vector3.zero)
         {
@@ -53,6 +54,12 @@ public class PlayerMotor : MonoBehaviour
                                                         desiredRotation,
                                                         rotationSpeed * Time.deltaTime);
         }
+    }
+
+    private void Disable()
+    {
+        Debug.Log("PlayerMotor disable");
+        rigidbody.velocity = Vector3.zero;
     }
 }
  
