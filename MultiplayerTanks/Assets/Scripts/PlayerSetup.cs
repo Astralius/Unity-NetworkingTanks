@@ -8,10 +8,13 @@ using UnityStandardAssets.Utility;
 /// </summary>
 public class PlayerSetup : NetworkBehaviour
 {
+    [SyncVar(hook="UpdatePlayerColor")]
     public Color PlayerColor;
-    public string BaseName = "Player  ";
+    [SyncVar(hook="UpdatePlayerName")]
     public int PlayerNumber = 1;
+    public string BaseName = "Player";
     public Text PlayerNameText;
+
 
     public override void OnStartClient()
     {
@@ -26,13 +29,26 @@ public class PlayerSetup : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-
-        SetLocalPlayerColor();
-        SetLocalPlayerName();
-        SetupFollowTarget();
+        SetupCameraFollow();
+        CmdSetupPlayer();
     }
 
-    private void SetupFollowTarget()
+    [Command]
+    private void CmdSetupPlayer()
+    {
+        GameManager.Instance.AddPlayer(this);
+    }
+
+    private void Start()
+    {
+        if (!isLocalPlayer)
+        {
+            UpdatePlayerName(PlayerNumber);
+            UpdatePlayerColor(PlayerColor);
+        }
+    }
+
+    private void SetupCameraFollow()
     {
         var followTarget = Camera.main.GetComponent<FollowTarget>();
         if (followTarget != null)
@@ -41,21 +57,21 @@ public class PlayerSetup : NetworkBehaviour
         }
     }
 
-    private void SetLocalPlayerColor()
+    private void UpdatePlayerColor(Color color)
     {
         MeshRenderer[] meshes = GetComponentsInChildren<MeshRenderer>();
         foreach (var meshRenderer in meshes)
         {
-            meshRenderer.material.color = PlayerColor;
+            meshRenderer.material.color = color;
         }
     }
 
-    private void SetLocalPlayerName()
+    private void UpdatePlayerName(int playerNumber)
     {
         if (PlayerNameText != null)
         {
             PlayerNameText.enabled = true;
-            PlayerNameText.text = BaseName + PlayerNumber;
+            PlayerNameText.text = BaseName + " " + PlayerNumber;
         }
     }
 }
