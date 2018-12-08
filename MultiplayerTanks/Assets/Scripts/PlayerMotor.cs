@@ -58,7 +58,6 @@ public class PlayerMotor : NetworkBehaviour
 
     private void Disable()
     {
-        Debug.Log("PlayerMotor disable");
         rigidbody.velocity = Vector3.zero;
     }
 }
