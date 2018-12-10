@@ -14,6 +14,7 @@ public class Bullet : NetworkBehaviour
     public GameObject ExplosionEffect;
     public List<string> BounceTags;
     public List<string> CollisionTags;
+    public PlayerController Owner;
 
     private List<ParticleSystem> allParticles;
     private new Rigidbody rigidbody;
@@ -41,7 +42,7 @@ public class Bullet : NetworkBehaviour
             var playerHealth = collision.gameObject.GetComponentInParent<PlayerHealth>();
             if (playerHealth != null)
             {
-                playerHealth.Damage(Damage);
+                playerHealth.Damage(Damage, Owner);
             }
             SelfDestruct();
         }

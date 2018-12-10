@@ -532,7 +532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0332841857792874d8bf0248b8c3647b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BulletPrefab: {fileID: 54231530803350458, guid: 285e76acf7c01844db2326c1dfcd0ade,
+  BulletPrefab: {fileID: 114350234589689642, guid: 285e76acf7c01844db2326c1dfcd0ade,
     type: 2}
   BulletSpawn: {fileID: 4170573227518510}
   ShotsPerRound: 2
@@ -674,8 +674,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerColor: {r: 0.082764626, g: 0.62352943, b: 1, a: 0}
-  BaseName: Player
   PlayerNumber: 1
+  BaseName: Player
   PlayerNameText: {fileID: 114527655691211742}
 --- !u!114 &114852023671031930
 MonoBehaviour:

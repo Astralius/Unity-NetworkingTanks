@@ -10,6 +10,7 @@ public class PlayerHealth : NetworkBehaviour
     public GameObject DeathEffect;
     public Slider HealthSlider;
     public float MaxHealth = 3f;
+    public PlayerController LastAttacker;
 
     [SyncVar(hook="UpdateHealthBar")]
     private float currentHealth;
@@ -34,13 +35,23 @@ public class PlayerHealth : NetworkBehaviour
         isDead = false;
     }
 
-    public void Damage(float damage)
+    public void Damage(float damage, PlayerController attacker = null)
     {
         if (isServer)
         {
+            if (attacker != null && attacker != GetComponent<PlayerController>())
+            {
+                LastAttacker = attacker;
+            }
             currentHealth -= damage;
             if (currentHealth <= 0f && !isDead)
             {
+                if (attacker != null)
+                {
+                    LastAttacker.Score++;
+                    GameManager.Instance.UpdateScoreboard();
+                }              
+                LastAttacker = null;
                 isDead = true;
                 RpcDie();
             }

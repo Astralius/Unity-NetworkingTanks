@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 /// </summary>
 public class PlayerShooter : NetworkBehaviour
 {
-    public Rigidbody BulletPrefab;
+    public Bullet BulletPrefab;
     public Transform BulletSpawn;
     public int ShotsPerRound = 2;
     public float RealoadTime = 1f;
@@ -39,6 +39,7 @@ public class PlayerShooter : NetworkBehaviour
     private void CmdShoot()
     {
         var bullet = Instantiate(BulletPrefab, BulletSpawn.position, BulletSpawn.rotation);
+        bullet.Owner = GetComponent<PlayerController>();
         NetworkServer.Spawn(bullet.gameObject);
     }
 

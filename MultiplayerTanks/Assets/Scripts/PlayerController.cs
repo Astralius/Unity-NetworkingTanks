@@ -13,6 +13,7 @@ public class PlayerController : NetworkBehaviour
     [Range(1f, 10f)]
     public float RespawnTime = 3f;
     public GameObject SpawnEffect;
+    public int Score;
 
     private PlayerSetup playerSetup;
     private PlayerMotor playerMotor;
