@@ -37,6 +37,8 @@ public class GameManager : NetworkBehaviour
     public Color[] PlayerColors = {Color.red, Color.blue, Color.green, Color.magenta};
     public int MinimumPlayers = 2;
     public int MaximumPlayers = 4;
+    public int CountdownSeconds = 3;
+    public int MaximumScore = 3;
     public Text MessageText;
     public List<Player> Players = new List<Player>();
     public Text[] LabelTexts = new Text[4];
@@ -44,6 +46,9 @@ public class GameManager : NetworkBehaviour
 
     [SyncVar]
     private int playersCount;
+    [SyncVar]
+    private bool gameOver = false;
+    private Player winner;
 
 
     public void AddPlayer(PlayerSetup setup)
@@ -67,9 +72,20 @@ public class GameManager : NetworkBehaviour
     {
         if (isServer)
         {
+            winner = GetWinner();
+            gameOver = winner != null;
+
             var names = Players.Select(p => p.Setup.PlayerNameText.text).ToArray();
             var scores = Players.Select(p => p.Controller.Score).ToArray();
             RpcUpdateScoreboard(names, scores);
+        }
+    }
+
+    public void UpdateMessage(string message)
+    {
+        if (isServer)
+        {
+            RpcUpdateMessage(message);
         }
     }
 
@@ -83,52 +99,64 @@ public class GameManager : NetworkBehaviour
         yield return StartCoroutine(EnterLobby());
         yield return StartCoroutine(PlayGame());
         yield return StartCoroutine(EndGame());
+        yield return StartCoroutine(RestartGame());
     }
 
     private IEnumerator EnterLobby()
     {
-        if (MessageText != null && !MessageText.IsActive())
-        {
-            MessageText.gameObject.SetActive(true);
-            MessageText.text = "waiting for players";
-        }
-
-        while (playersCount < MinimumPlayers)
+        do
         {
             DisablePlayers();
+            UpdateMessage("Waiting for players..");
             yield return null;
-        }
+        } while (playersCount < MinimumPlayers);
     }
 
     private IEnumerator PlayGame()
     {
+        StartCoroutine(Countdown());
+        
         EnablePlayers();
         UpdateScoreboard();
 
-        if (MessageText != null)
-        {
-            MessageText.gameObject.SetActive(false);
-        }
+        yield return new WaitForSeconds(3f);
+        UpdateMessage(string.Empty);
 
-        yield return null;
+        while (!gameOver)
+        {
+            yield return null;
+        }
+    }
+
+    private IEnumerator Countdown()
+    {
+        for (var i = CountdownSeconds; i >= 0; i--)
+        {
+            yield return new WaitForSeconds(1f);
+            UpdateMessage(i > 0 
+                ? i.ToString() 
+                : "Fight!");        
+        }
     }
 
     private IEnumerator EndGame()
     {
-        yield return null;
+        DisablePlayers();
+        UpdateMessage("GAME OVER \n " + winner.Setup.PlayerNameText + " wins!");
+        yield return new WaitForSeconds(3f);
     }
 
-    private static void EnablePlayers()
+    private IEnumerator RestartGame()
     {
-        SetPlayerState(true);
+        UpdateMessage("Restarting...");
+        Reset();
+        yield return new WaitForSeconds(3f);     
+        StartCoroutine(GameLoopRoutine());
     }
 
-    private static void DisablePlayers()
-    {
-        SetPlayerState(false);
-    }
 
-    private static void SetPlayerState(bool state)
+    [ClientRpc]
+    private void RpcSetPlayerState(bool state)
     {
         PlayerController[] allPlayers = GameObject.FindObjectsOfType<PlayerController>();
         foreach (var p in allPlayers)
@@ -155,4 +183,55 @@ public class GameManager : NetworkBehaviour
             ScoreTexts[j].text = string.Empty;
         }
     }
+
+    [ClientRpc]
+    private void RpcUpdateMessage(string message)
+    {
+        if (MessageText != null && message != null)
+        {
+            MessageText.gameObject.SetActive(true);
+            MessageText.text = message;
+        }
+
+    }
+
+    [ClientRpc]
+    private void RpcReset()
+    {
+        Players.ForEach(p => p.Controller.Score = 0);
+    }
+
+    private void EnablePlayers()
+    {
+        if (isServer)
+        {
+            RpcSetPlayerState(true);
+        }
+    }
+
+    private void DisablePlayers()
+    {
+        if (isServer)
+        {
+            RpcSetPlayerState(false);
+        }
+    }
+
+    private Player GetWinner()
+    {
+        return isServer
+            ? Players.FirstOrDefault(player => player.Controller.Score >= MaximumScore)
+            : null;
+    }
+    
+    private void Reset()
+    {
+        if (isServer)
+        {
+            RpcReset();
+            UpdateScoreboard();
+            winner = null;
+            gameOver = false;
+        }
+    } 
 }

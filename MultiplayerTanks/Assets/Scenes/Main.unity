@@ -5334,8 +5334,9 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 1, a: 1}
   - {r: 0, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 1, a: 1}
-  MinimumPlayers: 1
+  MinimumPlayers: 2
   MaximumPlayers: 4
+  CountdownSeconds: 3
   MessageText: {fileID: 1592999045}
   LabelTexts:
   - {fileID: 262024889}
@@ -10190,7 +10191,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 5
     m_MaxSize: 50
-    m_Alignment: 0
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
