@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+
 #pragma warning disable 649     // suppress 'never assigned'
-#pragma warning disable IDE0044 // suppress 'convert to readonly'
+#pragma warning disable 0109    // suppress 'new keyword is not required' warning in Unity editor
 
 /// <summary>
 /// Controls player tank's movement.

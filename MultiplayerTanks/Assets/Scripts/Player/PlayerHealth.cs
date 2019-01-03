@@ -46,7 +46,7 @@ public class PlayerHealth : NetworkBehaviour
             currentHealth -= damage;
             if (currentHealth <= 0f && !isDead)
             {
-                if (attacker != null)
+                if (LastAttacker != null)
                 {
                     LastAttacker.Score++;
                     GameManager.Instance.UpdateScoreboard();

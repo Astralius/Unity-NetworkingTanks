@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class Utility : MonoBehaviour
+public static class Utility
 {
     public static Vector3 ScreenToElevatedWorldPoint(Vector3 screenPoint, float elevation)
     {
@@ -11,5 +12,10 @@ public class Utility : MonoBehaviour
         return plane.Raycast(ray, out distance)
             ? ray.GetPoint(distance)
             : Vector3.zero;
+    }
+
+    public static T Random<T>(this IList<T> source)
+    {
+        return source[UnityEngine.Random.Range(0, source.Count)];
     }
 }

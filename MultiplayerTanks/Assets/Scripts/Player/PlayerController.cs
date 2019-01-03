@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.Networking;
 
 /// <summary>
@@ -15,7 +18,7 @@ public class PlayerController : NetworkBehaviour
     public GameObject SpawnEffect;
     public int Score;
 
-    private PlayerSetup playerSetup;
+    private IList<SpawnPoint> spawnPoints;
     private PlayerMotor playerMotor;
     private PlayerShooter playerShooter;
     private PlayerHealth playerHealth;
@@ -29,7 +32,7 @@ public class PlayerController : NetworkBehaviour
 
     private void Start()
     {
-        playerSetup = GetComponent<PlayerSetup>();
+        spawnPoints = FindObjectsOfType<SpawnPoint>();
         playerMotor = GetComponent<PlayerMotor>();
         playerShooter = GetComponent<PlayerShooter>();
         playerHealth = GetComponent<PlayerHealth>();
@@ -73,17 +76,29 @@ public class PlayerController : NetworkBehaviour
 
     private void Disable()
     {
-        Invoke("Respawn", RespawnTime);
+        StartCoroutine(this.Respawn(GetRandomVacantSpawnPosition()));
     }
 
-    private void Respawn()
+    private IEnumerator Respawn(Vector3 position)
     {
-        transform.position = originalPosition;
+        yield return new WaitForSeconds(RespawnTime);
+
+        transform.position = position;
+        spawnPoints.ToList()
+                   .ForEach(sp => sp.OccupantLeft(this));
+
         playerHealth.Reset();
         if (SpawnEffect != null)
         {
             var spawnEffect = Instantiate(SpawnEffect, transform.position + Vector3.up * 0.5f, Quaternion.identity);
             Destroy(spawnEffect, 3f);
         }
+    }
+
+    private Vector3 GetRandomVacantSpawnPosition()
+    {
+        return spawnPoints != null && spawnPoints.Any() ? 
+            spawnPoints.Where(sp => !sp.IsOccupied).ToList().Random().transform.position :
+            originalPosition;
     }
 }
