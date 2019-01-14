@@ -537,6 +537,10 @@ MonoBehaviour:
   BulletSpawn: {fileID: 4170573227518510}
   ShotsPerRound: 2
   RealoadTime: 1
+  MisfireEffect: {fileID: 19800000, guid: 06d7eeb38dffc4879b91f487e4924902, type: 2}
+  ObstacleMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!114 &114344204501046730
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -594,13 +598,14 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1521635398358378}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22322eaaa6b96fc4d9b51790f98df77b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   RespawnTime: 3
   SpawnEffect: {fileID: 118206, guid: 49cea2316ec6a41589509c0e782d9213, type: 2}
+  Score: 0
 --- !u!114 &114527655691211742
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -648,6 +653,7 @@ MonoBehaviour:
   DeathEffect: {fileID: 140182, guid: ead306b39f6b0428fa246bfff7d603ff, type: 2}
   HealthSlider: {fileID: 114138212317645240}
   MaxHealth: 3
+  LastAttacker: {fileID: 0}
 --- !u!114 &114651600387348910
 MonoBehaviour:
   m_ObjectHideFlags: 1

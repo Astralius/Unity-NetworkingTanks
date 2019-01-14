@@ -271,6 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 20
+  Delay: 0.04
   Lifetime: 5
   Bounces: 2
   Damage: 1
@@ -279,6 +280,7 @@ MonoBehaviour:
   - Bounce
   CollisionTags:
   - Player
+  Owner: {fileID: 0}
 --- !u!198 &198119097261223882
 ParticleSystem:
   m_ObjectHideFlags: 1

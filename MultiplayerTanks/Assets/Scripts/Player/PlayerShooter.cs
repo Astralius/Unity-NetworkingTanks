@@ -35,7 +35,7 @@ public class PlayerShooter : NetworkBehaviour
             Vector3 direction = (BulletSpawn.position - center).normalized;
             float distance = (BulletSpawn.position - center).magnitude;
 
-            if (Physics.SphereCast(center, 0.25f, direction, out hit, distance * 1.05f, ObstacleMask,
+            if (Physics.SphereCast(center, 0.25f, direction, out hit, distance * 1.4f, ObstacleMask,
                                    QueryTriggerInteraction.Ignore))
             {
                 if (MisfireEffect != null)
