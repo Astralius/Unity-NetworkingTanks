@@ -30,6 +30,15 @@ public class PlayerSetup : NetworkBehaviour
         CmdSetupPlayer();
     }
 
+    private void Start()
+    {
+        if (!isLocalPlayer)
+        {
+            UpdatePlayerName(PlayerNumber);
+            UpdatePlayerColor(PlayerColor);
+        }
+    }
+
     [Command]
     private void CmdSetupPlayer()
     {
