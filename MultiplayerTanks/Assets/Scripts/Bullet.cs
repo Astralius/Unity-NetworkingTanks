@@ -4,10 +4,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
+#pragma warning disable 0109
+
 [RequireComponent(typeof(Rigidbody))]
 public class Bullet : NetworkBehaviour
 {
     public int Speed = 100;
+    public float Delay = 0.03f;
     public float Lifetime = 5f;
     public int Bounces = 2;
     public int Damage = 1;
@@ -73,6 +76,9 @@ public class Bullet : NetworkBehaviour
 
     private IEnumerator SelfdestructAfterDelay(float lifetime)
     {
+        collider.enabled = false;
+        yield return new WaitForSeconds(Delay);
+        collider.enabled = true;
         yield return new WaitForSeconds(lifetime);
         SelfDestruct();
     }
