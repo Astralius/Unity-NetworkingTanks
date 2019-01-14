@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using UnityStandardAssets.Utility;
 
 /// <summary>
 /// Tracks player's name, id, color etc. for networking purposes.
@@ -14,7 +13,6 @@ public class PlayerSetup : NetworkBehaviour
     public int PlayerNumber;
     public string BaseName = "Player";
     public Text PlayerNameText;
-
 
     public override void OnStartClient()
     {
@@ -29,7 +27,6 @@ public class PlayerSetup : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
-        SetupCameraFollow();
         CmdSetupPlayer();
     }
 
@@ -37,15 +34,6 @@ public class PlayerSetup : NetworkBehaviour
     private void CmdSetupPlayer()
     {
         GameManager.Instance.AddPlayer(this);
-    }
-
-    private void SetupCameraFollow()
-    {
-        var followTarget = Camera.main.GetComponent<FollowTarget>();
-        if (followTarget != null)
-        {
-            followTarget.target = this.transform;
-        }
     }
 
     private void UpdatePlayerColor(Color color)

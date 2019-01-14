@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityStandardAssets.Utility;
 
 /// <summary>
 /// Manages the other player's components and handles input.
@@ -22,12 +23,14 @@ public class PlayerController : NetworkBehaviour
     private PlayerMotor playerMotor;
     private PlayerShooter playerShooter;
     private PlayerHealth playerHealth;
+    private FollowTarget cameraFollower;
     private Vector3 originalPosition;
     private Vector3 inputDirection = Vector3.zero;
 
     public override void OnStartLocalPlayer()
     {
         originalPosition = transform.position;
+        SetupCameraFollow();       
     }
 
     private void Start()
@@ -40,7 +43,7 @@ public class PlayerController : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && !playerHealth.IsDead)
         {
             playerMotor.MovePlayer(inputDirection.magnitude);
         }
@@ -65,6 +68,15 @@ public class PlayerController : NetworkBehaviour
                 - playerMotor.TurretTransform.position;
 
             playerMotor.RotateTurret(turretDirection);
+        }
+    }
+
+    private void SetupCameraFollow()
+    {
+        cameraFollower = Camera.main.GetComponent<FollowTarget>();
+        if (cameraFollower != null)
+        {
+            cameraFollower.target = this.transform;
         }
     }
 
