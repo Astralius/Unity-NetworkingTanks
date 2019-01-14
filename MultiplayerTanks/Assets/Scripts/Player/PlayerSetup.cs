@@ -11,7 +11,7 @@ public class PlayerSetup : NetworkBehaviour
     [SyncVar(hook="UpdatePlayerColor")]
     public Color PlayerColor;
     [SyncVar(hook="UpdatePlayerName")]
-    public int PlayerNumber = 1;
+    public int PlayerNumber;
     public string BaseName = "Player";
     public Text PlayerNameText;
 
@@ -39,15 +39,6 @@ public class PlayerSetup : NetworkBehaviour
         GameManager.Instance.AddPlayer(this);
     }
 
-    private void Start()
-    {
-        if (!isLocalPlayer)
-        {
-            UpdatePlayerName(PlayerNumber);
-            UpdatePlayerColor(PlayerColor);
-        }
-    }
-
     private void SetupCameraFollow()
     {
         var followTarget = Camera.main.GetComponent<FollowTarget>();
@@ -71,7 +62,7 @@ public class PlayerSetup : NetworkBehaviour
         if (PlayerNameText != null)
         {
             PlayerNameText.enabled = true;
-            PlayerNameText.text = BaseName + " " + PlayerNumber;
+            PlayerNameText.text = BaseName + " " + playerNumber;
         }
     }
 }
