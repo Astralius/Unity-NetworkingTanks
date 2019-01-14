@@ -53,18 +53,20 @@ public class GameManager : NetworkBehaviour
 
     public void AddPlayer(PlayerSetup setup)
     {
-        if (playersCount < MaximumPlayers)
+        if (isServer && playersCount < MaximumPlayers)
         {
             setup.PlayerColor = PlayerColors[playersCount];
             setup.PlayerNumber = ++playersCount;
 
-            Players.Add(new Player
+            var newPlayer = new Player
             {
                 Setup = setup,
                 Controller = setup.GetComponent<PlayerController>(),
                 LabelText = LabelTexts[setup.PlayerNumber - 1],
                 ScoreText = ScoreTexts[setup.PlayerNumber - 1]
-            });
+            };
+
+            Players.Add(newPlayer);
         }
     }
 
@@ -106,25 +108,19 @@ public class GameManager : NetworkBehaviour
     {
         do
         {
-            DisablePlayers();
             UpdateMessage("Waiting for players..");
-            yield return null;
+            yield return new WaitForSeconds(Time.deltaTime);
         } while (playersCount < MinimumPlayers);
     }
 
     private IEnumerator PlayGame()
     {
-        StartCoroutine(Countdown());
-        
-        EnablePlayers();
+        StartCoroutine(Countdown());               
         UpdateScoreboard();
-
-        yield return new WaitForSeconds(3f);
-        UpdateMessage(string.Empty);
 
         while (!gameOver)
         {
-            yield return null;
+            yield return new WaitForSeconds(Time.deltaTime);
         }
     }
 
@@ -133,16 +129,18 @@ public class GameManager : NetworkBehaviour
         for (var i = CountdownSeconds; i >= 0; i--)
         {
             yield return new WaitForSeconds(1f);
-            UpdateMessage(i > 0 
-                ? i.ToString() 
-                : "Fight!");        
+            UpdateMessage(i > 0 ? i.ToString() : "Fight!");        
         }
+
+        yield return new WaitForSeconds(2f);
+        UpdateMessage(string.Empty);
+        EnablePlayers();
     }
 
     private IEnumerator EndGame()
     {
         DisablePlayers();
-        UpdateMessage("GAME OVER \n " + winner.Setup.PlayerNameText + " wins!");
+        UpdateMessage("GAME OVER \n " + winner.Setup.PlayerNameText.text + " wins!");
         yield return new WaitForSeconds(3f);
     }
 
@@ -154,15 +152,12 @@ public class GameManager : NetworkBehaviour
         StartCoroutine(GameLoopRoutine());
     }
 
-
     [ClientRpc]
-    private void RpcSetPlayerState(bool state)
-    {
-        PlayerController[] allPlayers = GameObject.FindObjectsOfType<PlayerController>();
-        foreach (var p in allPlayers)
-        {
-            p.enabled = state;
-        }
+    private void RpcSetPlayersState(bool state)
+    {   
+        FindObjectsOfType<PlayerController>()
+           .ToList()
+           .ForEach(controller => controller.enabled = state);
     }
 
     [ClientRpc]
@@ -170,14 +165,14 @@ public class GameManager : NetworkBehaviour
     {
         for (var i = 0; i < playersCount; i++)
         {
-            if (playerNames[i] != null)
+            if (!string.IsNullOrEmpty(playerNames[i]))
             {
                 LabelTexts[i].text = playerNames[i];
             }
             ScoreTexts[i].text = playerScores[i].ToString();
         }
 
-        for (var j = MaximumPlayers - 1; j >= playersCount; j--)
+        for (var j = playersCount; j < MaximumPlayers; j++)
         {
             LabelTexts[j].text = string.Empty;
             ScoreTexts[j].text = string.Empty;
@@ -205,7 +200,7 @@ public class GameManager : NetworkBehaviour
     {
         if (isServer)
         {
-            RpcSetPlayerState(true);
+            RpcSetPlayersState(true);
         }
     }
 
@@ -213,7 +208,7 @@ public class GameManager : NetworkBehaviour
     {
         if (isServer)
         {
-            RpcSetPlayerState(false);
+            RpcSetPlayersState(false);
         }
     }
 
