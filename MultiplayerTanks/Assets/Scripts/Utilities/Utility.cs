@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class Utility
@@ -17,5 +19,10 @@ public static class Utility
     public static T Random<T>(this IList<T> source)
     {
         return source[UnityEngine.Random.Range(0, source.Count)];
+    }
+
+    public static T Random<T>(this IList<T> source, Func<T, bool> predicate)
+    {
+        return source.Where(predicate).ToList().Random();
     }
 }
