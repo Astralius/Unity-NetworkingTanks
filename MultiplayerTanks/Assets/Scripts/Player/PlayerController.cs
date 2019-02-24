@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -19,7 +18,7 @@ public class PlayerController : NetworkBehaviour
     public GameObject SpawnEffect;
     public int Score;
 
-    private IList<SpawnPoint> spawnPoints;
+    private SpawnPoint[] spawnPoints;
     private PlayerMotor playerMotor;
     private PlayerShooter playerShooter;
     private PlayerHealth playerHealth;
@@ -30,12 +29,12 @@ public class PlayerController : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         originalPosition = transform.position;
-        SetupCameraFollow();       
+        SetupCameraFollow();
     }
 
     private void Start()
     {
-        spawnPoints = FindObjectsOfType<SpawnPoint>();
+        spawnPoints = FindObjectsOfType<SpawnPoint>().Where(sp => sp.gameObject.activeInHierarchy).ToArray();
         playerMotor = GetComponent<PlayerMotor>();
         playerShooter = GetComponent<PlayerShooter>();
         playerHealth = GetComponent<PlayerHealth>();
@@ -109,8 +108,8 @@ public class PlayerController : NetworkBehaviour
 
     private Vector3 GetRandomVacantSpawnPosition()
     {
-        return spawnPoints != null && spawnPoints.Any() ? 
-            spawnPoints.Where(sp => !sp.IsOccupied).ToList().Random().transform.position :
-            originalPosition;
+        return spawnPoints != null && spawnPoints.Any() 
+            ? spawnPoints.Random(sp => !sp.IsOccupied).transform.position 
+            : originalPosition;
     }
 }

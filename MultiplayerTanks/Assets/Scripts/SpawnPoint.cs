@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class SpawnPoint : MonoBehaviour
+public class SpawnPoint : NetworkBehaviour
 {
     [ReadOnly]
+    [SyncVar]
     public bool IsOccupied;
 
     private readonly IList<PlayerController> occupants = new List<PlayerController>();
@@ -16,7 +18,7 @@ public class SpawnPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        var controller = other.GetComponent<PlayerController>();
+        var controller = other.GetComponentInParent<PlayerController>();
         if (controller != null)
         {
             occupants.Add(controller);
@@ -26,7 +28,7 @@ public class SpawnPoint : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        var controller = other.GetComponent<PlayerController>();
+        var controller = other.GetComponentInParent<PlayerController>();
         if (controller != null)
         {
             occupants.Remove(controller);
